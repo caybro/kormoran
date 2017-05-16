@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
+        <file>ApplicationRoot.qml</file>
+        <file>BrowserDialog.qml</file>
+        <file>BrowserWindow.qml</file>
+        <file>DownloadView.qml</file>
+        <file>FullScreenNotification.qml</file>
+        <file>BrowserTabDelegate.qml</file>
+        <file>icons/go-next.png</file>
+        <file>icons/go-previous.png</file>
+        <file>icons/process-stop.png</file>
+        <file>icons/view-refresh.png</file>
+        <file>ToolbarButton.qml</file>
+        <file>icons/menu.png</file>
+    </qresource>
+</RCC>
