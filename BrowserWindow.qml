@@ -25,7 +25,7 @@ ApplicationWindow {
     readonly property bool platformIsMac: Qt.platform === "osx"
 
     Settings {
-        id : appSettings
+        category: "Browser"
         property alias autoLoadImages: loadImages.checked;
         property alias javaScriptEnabled: javaScriptEnabled.checked;
         property alias errorPageEnabled: errorPageEnabled.checked;
@@ -33,6 +33,14 @@ ApplicationWindow {
         property alias fullScreenSupportEnabled: fullScreenSupportEnabled.checked;
         property alias autoLoadIconsForPage: autoLoadIconsForPage.checked;
         property alias touchIconsEnabled: touchIconsEnabled.checked;
+    }
+
+    Settings {
+        category: "Window"
+        property alias x: browserWindow.x
+        property alias y: browserWindow.y
+        property alias width: browserWindow.width
+        property alias height: browserWindow.height
     }
 
     Shortcut {
@@ -72,6 +80,8 @@ ApplicationWindow {
                 browserWindow.visibility = browserWindow.previousVisibility
                 fullScreenNotification.hide()
                 currentWebView.triggerWebAction(WebEngineView.ExitFullScreen);
+            } else if (currentWebView && currentWebView.loading) {
+                currentWebView.stop();
             }
         }
     }
@@ -151,7 +161,7 @@ ApplicationWindow {
 
                     Instantiator {
                         model: currentWebView && currentWebView.navigationHistory.backItems
-                        MenuItem {
+                        delegate: MenuItem {
                             text: model.title
                             onTriggered: currentWebView.goBackOrForward(model.offset)
                             checkable: !enabled
@@ -179,7 +189,7 @@ ApplicationWindow {
 
                     Instantiator {
                         model: currentWebView && currentWebView.navigationHistory.forwardItems
-                        MenuItem {
+                        delegate: MenuItem {
                             text: model.title
                             onTriggered: currentWebView.goBackOrForward(model.offset)
                             checkable: !enabled
@@ -200,28 +210,10 @@ ApplicationWindow {
                 onClicked: loading ? currentWebView.stop() : currentWebView.reload()
                 activeFocusOnTab: !browserWindow.platformIsMac
             }
-            TextField {
+            AddressBar {
                 id: addressBar
                 Layout.fillWidth: true
-                selectByMouse: true
-                activeFocusOnPress: true
-                activeFocusOnTab: true
-                persistentSelection: true
-                Image {
-                    id: faviconImage
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    x: 5
-                    z: 2
-                    width: height; height: addressBar.contentHeight
-                    sourceSize: Qt.size(width, height)
-                    source: currentWebView && currentWebView.icon
-                    visible: source != ""
-                }
-                leftPadding: faviconImage.source !== "" ? faviconImage.width * 1.5 : 0
-                focus: true
-                text: currentWebView && currentWebView.url
-                onAccepted: currentWebView.url = utils.fromUserInput(text)
+                currentWebView: browserWindow.currentWebView
             }
             ToolbarButton {
                 id: settingsMenuButton

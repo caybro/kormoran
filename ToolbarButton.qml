@@ -4,7 +4,7 @@ import QtQuick.Controls 2.0
 ToolButton {
     id: control
     hoverEnabled: true
-    padding: width * .2
+    padding: width * .25
 
     property alias iconSource: icon.source
     property string tooltip
