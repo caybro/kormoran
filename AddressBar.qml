@@ -14,7 +14,7 @@ TextField {
     Image {
         id: faviconImage
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: (parent.height - parent.contentHeight)/-4
+        anchors.verticalCenterOffset: (parent.height - parent.contentHeight)/-5
         
         x: 5
         z: 2

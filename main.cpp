@@ -27,6 +27,7 @@ int main(int argc, char **argv)
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QApplication app(argc, argv);
+    app.setWindowIcon(QIcon::fromTheme("internet-web-browser"));
 
     QtWebEngine::initialize();
 

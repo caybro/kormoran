@@ -226,6 +226,7 @@ ApplicationWindow {
                 hoverEnabled: true
                 Menu {
                     id: settingsMenu
+                    y: parent.y + parent.height
                     MenuItem {
                         id: loadImages
                         text: "Autoload images"
