@@ -24,7 +24,8 @@ int main(int argc, char **argv)
 {
     qputenv("QTWEBENGINE_DIALOG_SET", "QtQuickControls2");
 
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon::fromTheme("internet-web-browser"));

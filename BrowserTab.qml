@@ -11,12 +11,18 @@ TabButton {
     contentItem: RowLayout {
         Image {
             id: faviconImage
-            width: height; height: control.availableHeight * .5
+            width: height; height: control.availableHeight/2
             sourceSize: Qt.size(width, height)
-            visible: source != ""
+            visible: source != "" && !busyIndicator.running
             source: webview && webview.icon
         }
+        BusyIndicator {
+            id: busyIndicator
+            visible: running
+            running: webview && webview.loading
+        }
         Text {
+            id: pageTitle
             Layout.fillWidth: true
             text: webview && webview.title ? webview.title : qsTr("Untitled")
             font: control.font
@@ -26,8 +32,16 @@ TabButton {
         }
         ToolButton {
             text: "⊠"
-            font.pixelSize: control.availableHeight * .5
+            font.pixelSize: control.availableHeight/2
             onClicked: webview.triggerWebAction(WebEngineView.RequestClose)
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.MiddleButton
+        onClicked: {
+            webview.triggerWebAction(WebEngineView.RequestClose)
         }
     }
 }
