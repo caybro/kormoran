@@ -123,17 +123,6 @@ WebEngineView {
         reloadTimer.start()
     }
 
-    onWindowCloseRequested: {
-        if (tabs.count == 1) {
-            browserWindow.close()
-        } else {
-            var index = tabs.currentIndex;
-            browserViewLayout.children[index].destroy();
-            tabs.removeItem(index);
-            tabs.currentIndex = tabs.count - 1;
-        }
-    }
-
     Timer {
         id: reloadTimer
         interval: 0

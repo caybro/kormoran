@@ -319,7 +319,25 @@ ApplicationWindow {
 
     Component {
         id: browserTabComponent
-        BrowserTabDelegate { }
+        BrowserTabDelegate {
+            onWindowCloseRequested: {
+                if (tabs.count == 1) {
+                    browserWindow.close()
+                } else {
+                    var tabCount = browserViewLayout.children.length;
+
+                    for (var i = 0; i < tabCount; i++) {
+                        var tab = browserViewLayout.children[i];
+                        if (tab === this) {
+                            browserViewLayout.children[i].destroy();
+                            tabs.removeItem(i);
+                            tabs.currentIndex = tabs.count - 1;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     function createEmptyTab(profile) {
@@ -347,6 +365,7 @@ ApplicationWindow {
     MouseArea {
         anchors.fill: browserViewLayout
         acceptedButtons: Qt.BackButton | Qt.ForwardButton
+        // @disable-check M2
         cursorShape: undefined
         onClicked: {
             if (!currentWebView || currentWebView.url == "")
