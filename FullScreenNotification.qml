@@ -45,13 +45,12 @@ Rectangle {
     width: 500
     height: 40
     color: "white"
-    radius: 7
+    radius: 5
 
-    visible: false
+    visible: opacity !== 0.0
     opacity: 0
 
     function show() {
-        visible = true
         opacity = 1
         reset.start()
     }
@@ -64,10 +63,6 @@ Rectangle {
     Behavior on opacity {
         NumberAnimation {
             duration: 750
-            onStopped: {
-                if (opacity == 0)
-                    visible = false
-            }
         }
     }
 
@@ -81,8 +76,7 @@ Rectangle {
         id: message
         width: parent.width
 
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.centerIn: parent
 
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
