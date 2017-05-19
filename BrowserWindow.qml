@@ -343,6 +343,22 @@ ApplicationWindow {
         Component.onCompleted: createEmptyTab(defaultProfile)
     }
 
+    MouseArea {
+        anchors.fill: browserViewLayout
+        acceptedButtons: Qt.BackButton | Qt.ForwardButton
+        cursorShape: undefined
+        onClicked: {
+            if (!currentWebView || currentWebView.url == "")
+                return;
+
+            if (mouse.button === Qt.BackButton) {
+                currentWebView.triggerWebAction(WebEngineView.Back)
+            } else if (mouse.button === Qt.ForwardButton) {
+                currentWebView.triggerWebAction(WebEngineView.Forward)
+            }
+        }
+    }
+
     MessageDialog {
         id: sslDialog
 
