@@ -3,7 +3,7 @@ TARGET = kormoran
 
 QT += quick quickcontrols2 widgets webengine
 
-CONFIG += c++11
+CONFIG += c++11 debug_and_release
 
 SOURCES += main.cpp
 

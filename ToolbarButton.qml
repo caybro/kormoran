@@ -22,7 +22,7 @@ ToolButton {
         opacity: control.enabled ? 1.0 : 0.5
 
         ToolTip.visible: control.hovered && control.tooltip !== ""
-        ToolTip.timeout: 1000
+        ToolTip.timeout: 750
         ToolTip.text: control.tooltip
     }
 

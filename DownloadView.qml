@@ -53,9 +53,8 @@ import QtQuick.Controls 2.0
 import QtWebEngine 1.4
 import QtQuick.Layouts 1.3
 
-Rectangle {
+Pane {
     id: downloadView
-    color: "lightgray"
 
     ListModel {
         id: downloadModel
@@ -81,7 +80,7 @@ Rectangle {
                 id: progressBar
 
                 property real progress: downloadModel.downloads[index]
-                                       ? downloadModel.downloads[index].receivedBytes / downloadModel.downloads[index].totalBytes : 0
+                                        ? downloadModel.downloads[index].receivedBytes / downloadModel.downloads[index].totalBytes : 0
 
                 radius: 3
                 color: width == listView.width ? "green" : "#2b74c7"
@@ -97,6 +96,7 @@ Rectangle {
                     left: parent.left
                     right: parent.right
                     leftMargin: 20
+                    rightMargin: 20
                 }
                 Label {
                     id: label
@@ -111,6 +111,7 @@ Rectangle {
                     id: cancelButton
                     anchors.right: parent.right
                     //iconSource: "icons/process-stop.png" // FIXME
+                    text: qsTr("Stop")
                     onClicked: {
                         var download = downloadModel.downloads[index]
 
@@ -154,22 +155,14 @@ Rectangle {
             text: qsTr("No active downloads.")
         }
 
-        Rectangle {
-            color: "gray"
+        Button {
             anchors {
+                horizontalCenter: parent.horizontalCenter
                 bottom: parent.bottom
-                left: parent.left
-                right: parent.right
             }
-            height: 30
-            Button {
-                id: okButton
-                text: qsTr("OK")
-                anchors.centerIn: parent
-                onClicked: {
-                    downloadView.visible = false
-                }
-            }
+            id: okButton
+            text: qsTr("OK")
+            onClicked: downloadView.visible = false
         }
     }
 }

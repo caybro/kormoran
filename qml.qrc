@@ -14,5 +14,6 @@
         <file>ToolbarButton.qml</file>
         <file>icons/menu.png</file>
         <file>AddressBar.qml</file>
+        <file>BrowserTab.qml</file>
     </qresource>
 </RCC>

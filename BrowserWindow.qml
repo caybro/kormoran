@@ -25,6 +25,7 @@ ApplicationWindow {
     readonly property bool platformIsMac: Qt.platform === "osx"
 
     Settings {
+        id: appSettings
         category: "Browser"
         property alias autoLoadImages: loadImages.checked;
         property alias javaScriptEnabled: javaScriptEnabled.checked;
@@ -76,12 +77,14 @@ ApplicationWindow {
     Shortcut {
         sequence: StandardKey.Cancel
         onActivated: {
+            if (currentWebView && currentWebView.loading) {
+                currentWebView.stop();
+            }
+
             if (currentWebView.state == "FullScreen") {
                 browserWindow.visibility = browserWindow.previousVisibility
                 fullScreenNotification.hide()
                 currentWebView.triggerWebAction(WebEngineView.ExitFullScreen);
-            } else if (currentWebView && currentWebView.loading) {
-                currentWebView.stop();
             }
         }
     }
@@ -145,7 +148,7 @@ ApplicationWindow {
     header: ToolBar {
         id: navigationBar
         RowLayout {
-            anchors.fill: parent;
+            width: parent.width
             ToolbarButton {
                 id: backButton
                 iconSource: "qrc:/icons/go-previous.png"
@@ -301,49 +304,40 @@ ApplicationWindow {
         }
     }
 
-    TabBar {
+    footer: TabBar {
         id: tabs
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
         currentIndex: 0
         visible: count > 1
 
-        function createTab(title) {
-            var tab = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; TabButton {}",
-                                         tabs, "browserTab");
-            tab.text = title;
+        function createTab(browserView) {
+            var component = Qt.createComponent("BrowserTab.qml");
+            var tab = component.createObject(tabs, { "webview": browserView });
             tabs.addItem(tab);
         }
     }
 
     Component {
         id: browserTabComponent
-        BrowserTabDelegate {
-            anchors.fill: parent
-        }
+        BrowserTabDelegate { }
     }
 
     function createEmptyTab(profile) {
-        var tab = browserTabComponent.createObject(browserViewLayout);
+        var browserView = browserTabComponent.createObject(browserViewLayout);
 
-        if (tab === null) {
+        if (browserView === null) {
             console.error("Error creating tab view delegate");
             return;
         }
 
-        tab.profile = profile;
-        tabs.createTab(Qt.binding(function() { return tab.title !== "" ? tab.title : qsTr("Untitled"); }));
-        browserViewLayout.children[browserViewLayout.children.length] = tab;
-        return tab;
+        browserView.profile = profile;
+        tabs.createTab(browserView);
+        browserViewLayout.children[browserViewLayout.children.length] = browserView;
+        return browserView;
     }
 
     StackLayout {
         id: browserViewLayout
-        anchors.top: browserWindow.visibility == Window.FullScreen || !tabs.visible ? parent.top : tabs.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
         currentIndex: tabs.currentIndex
 
         Component.onCompleted: createEmptyTab(defaultProfile)
@@ -358,9 +352,9 @@ ApplicationWindow {
         title: qsTr("Server's certificate not trusted")
         text: qsTr("Do you wish to continue?")
         detailedText: qsTr("If you wish so, you may continue with an unverified certificate. " +
-                      "Accepting an unverified certificate means " +
-                      "you may not be connected with the host you tried to connect to.\n" +
-                      "Do you wish to override the security check and continue?")
+                           "Accepting an unverified certificate means " +
+                           "you may not be connected with the host you tried to connect to.\n" +
+                           "Do you wish to override the security check and continue?")
         onYes: {
             certErrors.shift().ignoreCertificateError()
             presentError()
@@ -383,6 +377,7 @@ ApplicationWindow {
 
     FullScreenNotification {
         id: fullScreenNotification
+        anchors.centerIn: parent
     }
 
     DownloadView {

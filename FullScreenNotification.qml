@@ -77,9 +77,6 @@ Rectangle {
         onTriggered: hide()
     }
 
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-
     Text {
         id: message
         width: parent.width
